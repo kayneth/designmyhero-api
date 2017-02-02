@@ -1,0 +1,22 @@
+{
+  "name": "designmyhero",
+  "description": "A student project to make a ecommerce website about costume",
+  "main": "index.js",
+  "authors": [
+    "Kayneth"
+  ],
+  "license": "ISC",
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "^1.6.1",
+    "threejs": "*"
+  }
+}

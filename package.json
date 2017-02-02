@@ -1,0 +1,34 @@
+{
+  "name": "designmyhero",
+  "version": "1.0.0",
+  "description": "A student project to make a ecommerce website about costume",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "dependencies": {
+    "bower": "^1.8.0"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^3.1.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-csscomb": "^3.0.8",
+    "gulp-csso": "^2.0.0",
+    "gulp-filter": "^5.0.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^3.1.0",
+    "gulp-uglify": "^2.0.1",
+    "main-bower-files": "^2.13.1",
+    "browser-sync": "2.6.5",
+    "gulp-babel": "5.1.0",
+    "gulp-cache": "0.2.8",
+    "gulp-imagemin": "2.2.1",
+    "gulp-plumber": "1.0.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Kayneth",
+  "license": "ISC"
+}
