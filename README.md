@@ -10,6 +10,8 @@ A Symfony project created on February 2, 2017, 12:26 am.
 
 # Préparer le projet en dev
 
+* `composer install` - préparation de symfony
+* `php bin/console doctrine:database:create` - créé la DB
 * `npm install` - pour installer les dépendances de dev (utilisé pour gulp)
 * `bower install` - pour installer les dépendances front
 * `gulp vendor` - à chaque fois qu'on rajoute un bower component
