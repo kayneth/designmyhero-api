@@ -4,7 +4,7 @@ DESIGNMYHERO - Student Project
 A Symfony project created on February 2, 2017, 12:26 am.
  
 * Le Framework Back-end est Symfony configuré comme une API REST
-* Le projet est écrit en ES6 et transpilé en ES5
+* Le projet est écrit en ES6 et transpilé en ES5 (merci Babel)
 * Le Framework Front-end est Angular 1
 * Le Framework WebGL est Three.js
 
@@ -31,3 +31,18 @@ http://danielkummer.github.io/git-flow-cheatsheet/index.fr_FR.html
 * Le code doit être relu par une autre personne
 * On repart toujours de master pour créer une branche
     * Créer une branche avec `git checkout -b ma-branche`
+    
+# Nos outils
+
+## Back-end
+
+* Symfony 3.2
+* FOSRestBundle
+* JMSSerializer
+* FOSJsRouting
+
+## Front-end
+
+### Angular
+
+* https://github.com/mgonto/restangular - Restangular
