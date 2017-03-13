@@ -45,6 +45,10 @@ http://danielkummer.github.io/git-flow-cheatsheet/index.fr_FR.html
 
 ## Front-end
 
+### Gulp
+
+* Ajouter Wiredep ??? 
+
 ### Angular
 
 * https://github.com/mgonto/restangular - Restangular

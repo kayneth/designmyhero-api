@@ -50,7 +50,7 @@ gulp.task('images', function(){
 });
 
 gulp.task('js', function() {
-    return gulp.src(src_path + '/js/*.js')
+    return gulp.src(src_path + '/js/**/*.js')
         .pipe(plumber({
             errorHandler: function (error) {
                 console.log(error.message);
@@ -128,5 +128,5 @@ gulp.task('default', ['browser-sync'], function(){
     gulp.watch("web/src/scss/**/*.scss", ['sass']);
     gulp.watch("web/src/js/**/*.js", ['js']);
     gulp.watch("*.html", ['bs-reload']);
-    gulp.watch("*.html.twig", ['bs-reload']);
+    gulp.watch("**/*.html.twig", ['bs-reload']);
 });
