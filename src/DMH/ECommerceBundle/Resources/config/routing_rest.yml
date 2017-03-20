@@ -1,0 +1,4 @@
+product:
+    type:     rest
+    resource: DMH\ECommerceBundle\Controller\Rest\ProductController
+    name_prefix:  api_

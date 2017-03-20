@@ -26,7 +26,7 @@ class FileUploadType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'DMH\ECommerce\Bundle\Entity\Media'
+            'data_class' => 'DMH\ECommerceBundle\Entity\Media'
         ));
     }
 }

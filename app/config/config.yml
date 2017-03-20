@@ -91,7 +91,7 @@ fos_user:
 fos_rest:
     routing_loader:
         default_format: json
-        include_format: false
+        include_format: true
     body_converter:
         enabled: true
         validate: true
@@ -109,7 +109,11 @@ fos_rest:
             html: true
         failed_validation: HTTP_BAD_REQUEST
         default_engine: twig
-    disable_csrf_role: ROLE_USER
+    body_listener:
+        enabled: true
+    param_fetcher_listener:
+        enabled: true
+    disable_csrf_role: ROLE_API
 
 jms_serializer:
     enable_short_alias: false

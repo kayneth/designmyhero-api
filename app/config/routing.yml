@@ -1,3 +1,9 @@
+#REST
+rest :
+  type : rest
+  resource : "routing_rest.yml"
+  prefix : /api
+
 _liip_imagine:
     resource: "@LiipImagineBundle/Resources/config/routing.xml"
 

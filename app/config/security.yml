@@ -32,6 +32,10 @@ security:
             remember_me:
               secret:     %secret%
 
+        doc:
+            pattern: ^/doc
+            security: false
+
     access_control:
         - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }

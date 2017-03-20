@@ -52,3 +52,4 @@ http://danielkummer.github.io/git-flow-cheatsheet/index.fr_FR.html
 ### Angular
 
 * https://github.com/mgonto/restangular - Restangular
+* https://github.com/marmelab/ng-admin - ng-admin

@@ -1,3 +1,7 @@
 dmhe_commerce_homepage:
     path:     /
     defaults: { _controller: DMHECommerceBundle:Default:index }
+
+dmhe_commerce_product:
+    resource: "@DMHECommerceBundle/Resources/config/routing/product.yml"
+    prefix:   /product
