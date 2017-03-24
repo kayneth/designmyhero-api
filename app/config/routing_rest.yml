@@ -1,3 +1,7 @@
 dmh_ecommerce:
     type: rest
     resource: "@DMHECommerceBundle/Resources/config/routing_rest.yml"
+
+dmh_user:
+    type: rest
+    resource: "@DMHUserBundle/Resources/config/routing_rest.yml"

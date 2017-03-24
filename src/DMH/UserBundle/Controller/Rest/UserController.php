@@ -1,9 +1,9 @@
 <?php
 
-namespace DMH\ECommerceBundle\Controller\Rest;
+namespace DMH\UserBundle\Controller\Rest;
 
-use DMH\ECommerceBundle\Entity\Product;
-use DMH\ECommerceBundle\Form\ProductType;
+use DMH\UserBundle\Entity\User;
+use DMH\UserBundle\Form\UserType;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\View\View;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -15,7 +15,7 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\Annotations\QueryParam;
 use FOS\RestBundle\Request\ParamFetcher;
 
-class ProductController extends Controller implements ClassResourceInterface
+class UserController extends Controller implements ClassResourceInterface
 {
 
     /**
@@ -25,7 +25,7 @@ class ProductController extends Controller implements ClassResourceInterface
      *
      * @ApiDoc(
      *  resource=true,
-     *  description="Get all Product",
+     *  description="Get all User",
      *  tags={
      *     "stable"
      *  },
@@ -33,7 +33,7 @@ class ProductController extends Controller implements ClassResourceInterface
      *      200="Returned when successful",
      *      403="Returned when the user is not authorized",
      *      404={
-     *        "Returned when the products is not found",
+     *        "Returned when the user is not found",
      *        "Returned when something else is not found"
      *      }
      *  }
@@ -47,8 +47,8 @@ class ProductController extends Controller implements ClassResourceInterface
         $limit = $paramFetcher->get('limit') ?: null;
 
         $em = $this->getDoctrine()->getManager();
-        $products = $em
-            ->getRepository('DMHECommerceBundle:Product')
+        $user = $em
+            ->getRepository('DMHUserBundle:User')
             ->findBy(
                 array(),
                 array(),
@@ -56,43 +56,43 @@ class ProductController extends Controller implements ClassResourceInterface
                 $offset
             );
         ;
-        return array('products' => $products);
+        return array('user' => $user);
     }
 
     public function getAction($slug)
     {
         $em = $this->getDoctrine()->getManager();
-        $product = $em
-            ->getRepository('DMHECommerceBundle:Product')
+        $user = $em
+            ->getRepository('DMHUserBundle:User')
             ->findOneById($slug);
         ;
         if (empty($product)) {
-            return View::create(['error' => 'Product not found'], Response::HTTP_NOT_FOUND);
+            return View::create(['error' => 'User not found'], Response::HTTP_NOT_FOUND);
         }
-        return array('product' => $product);
+        return array('user' => $user);
     }
 
     /**
      * @ApiDoc(
-     *    description="Create a product",
-     *    input={"class"=ProductType::class, "name"=""},
+     *    description="Create an user",
+     *    input={"class"=UserType::class, "name"=""},
      *    statusCodes = {
      *        201 = "Created successfully",
      *        400 = "Invalid Form"
      *    },
      *    responseMap={
-     *         201 = {"class"=Product::class, "groups"={""}},
-     *         400 = { "class"=ProductType::class, "form_errors"=true, "name" = ""}
+     *         201 = {"class"=User::class, "groups"={""}},
+     *         400 = { "class"=UserType::class, "form_errors"=true, "name" = ""}
      *    }
      * )
      *
      * @Rest\View(statusCode=Response::HTTP_CREATED, serializerGroups={""})
-     * @Rest\Post("/products")
+     * @Rest\Post("/users")
      */
     public function postAction(Request $request)
     {
-        $product = new Product();
-        $form = $this->createForm(ProductType::class, $product);
+        $user = new User();
+        $form = $this->createForm(UserType::class, $user);
 
         $data = $request->request->all();
 
@@ -110,10 +110,10 @@ class ProductController extends Controller implements ClassResourceInterface
         if ($form->isValid()) {
 
             $em = $this->getDoctrine()->getManager();
-            $em->persist($product);
+            $em->persist($user);
             $em->flush();
 
-            return array('product' => $product);
+            return array('user' => $user);
 
         }else{
             //essayer ça pour voir si ça retourne un meilleur format qu'avec le form_serializer maison
@@ -131,9 +131,9 @@ class ProductController extends Controller implements ClassResourceInterface
      *     }
      * )
      */
-    public function putAction(Request $request, Product $product)
+    public function putAction(Request $request, User $user)
     {
-        $form = $this->createForm(ProductType::class, $product);
+        $form = $this->createForm(UserType::class, $user);
 
         $data = $request->request->all();
 
@@ -154,10 +154,10 @@ class ProductController extends Controller implements ClassResourceInterface
 
             $em = $this->getDoctrine()->getManager();
             $em->flush();
-            return array('product' => $product);
+            return array('user' => $user);
 
         }else{
-           return $form;
+            return $form;
         }
     }
 
@@ -166,14 +166,14 @@ class ProductController extends Controller implements ClassResourceInterface
      *
      * )
      * @Rest\View(statusCode=Response::HTTP_NO_CONTENT)
-     * @Rest\Delete("/products/{id}")
+     * @Rest\Delete("/users/{id}")
      */
-    public function removeAction(Request $request, Product $product)
+    public function removeAction(Request $request, User $user)
     {
-        /* @var $product Product */
+        /* @var $user User */
         $em = $this->get('doctrine.orm.entity_manager');
-        if ($product) {
-            $em->remove($product);
+        if ($user) {
+            $em->remove($user);
             $em->flush();
         }
     }

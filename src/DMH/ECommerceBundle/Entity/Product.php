@@ -3,6 +3,7 @@
 namespace DMH\ECommerceBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\JoinColumn;
 use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation\ExclusionPolicy;
@@ -74,9 +75,27 @@ class Product
 
     private $thumbnailDir;
 
+    /**
+     * @var Category
+     *
+     * @ORM\ManyToOne(targetEntity="DMH\ECommerceBundle\Entity\Category")
+     * @JoinColumn(name="category", referencedColumnName="id")
+     *
+     */
+    private $category;
+
+    /**
+     * @var Costume
+     *
+     * @ORM\ManyToOne(targetEntity="DMH\ECommerceBundle\Entity\Costume")
+     * @JoinColumn(name="costume", referencedColumnName="id")
+     *
+     */
     private $costume;
 
-    private $model;
+    private $model3D;
+
+    private $pattern;
 
 
     /**

@@ -2,3 +2,18 @@ product:
     type:     rest
     resource: DMH\ECommerceBundle\Controller\Rest\ProductController
     name_prefix:  api_
+
+costume:
+    type:     rest
+    resource: DMH\ECommerceBundle\Controller\Rest\CostumeController
+    name_prefix:  api_
+
+category:
+    type:     rest
+    resource: DMH\ECommerceBundle\Controller\Rest\CategoryController
+    name_prefix:  api_
+
+universe:
+    type:     rest
+    resource: DMH\ECommerceBundle\Controller\Rest\UniverseController
+    name_prefix:  api_

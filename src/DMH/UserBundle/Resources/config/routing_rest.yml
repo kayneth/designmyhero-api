@@ -1,0 +1,4 @@
+user:
+    type:     rest
+    resource: DMH\UserBundle\Controller\Rest\UserController
+    name_prefix:  api_
