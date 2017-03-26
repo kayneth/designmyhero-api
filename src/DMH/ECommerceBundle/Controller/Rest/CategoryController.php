@@ -80,14 +80,14 @@ class CategoryController extends Controller implements ClassResourceInterface
     /**
      * @ApiDoc(
      *    description="Create a category",
-     *    input={"class"=ProductType::class, "name"=""},
+     *    input={"class"=CategoryType::class, "name"=""},
      *    statusCodes = {
      *        201 = "Created successfully",
      *        400 = "Invalid Form"
      *    },
      *    responseMap={
-     *         201 = {"class"=Product::class, "groups"={""}},
-     *         400 = { "class"=ProductType::class, "form_errors"=true, "name" = ""}
+     *         201 = {"class"=Category::class, "groups"={""}},
+     *         400 = { "class"=CategoryType::class, "form_errors"=true, "name" = ""}
      *    }
      * )
      *
@@ -96,8 +96,8 @@ class CategoryController extends Controller implements ClassResourceInterface
      */
     public function postAction(Request $request)
     {
-        $product = new Category();
-        $form = $this->createForm(CategoryType::class, $product);
+        $category = new Category();
+        $form = $this->createForm(CategoryType::class, $category);
 
         $data = $request->request->all();
 
@@ -113,10 +113,10 @@ class CategoryController extends Controller implements ClassResourceInterface
         if ($form->isValid()) {
 
             $em = $this->getDoctrine()->getManager();
-            $em->persist($product);
+            $em->persist($category);
             $em->flush();
 
-            return array('category' => $product);
+            return array('category' => $category);
 
         }else{
             //essayer ça pour voir si ça retourne un meilleur format qu'avec le form_serializer maison
