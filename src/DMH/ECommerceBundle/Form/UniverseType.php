@@ -13,7 +13,12 @@ class UniverseType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name')        ;
+        $builder
+            ->add('name')
+            ->add('thumbnail', FileUploadType::class, array(
+                'required' => false
+            ))
+        ;
     }
     
     /**
@@ -22,6 +27,7 @@ class UniverseType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
+            'csrf_protection'   => false,
             'data_class' => 'DMH\ECommerceBundle\Entity\Universe'
         ));
     }

@@ -3,14 +3,15 @@
 namespace DMH\ECommerceBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\JoinColumn;
 
 /**
- * Universe
+ * Costume
  *
- * @ORM\Table(name="dmh_universe")
- * @ORM\Entity(repositoryClass="DMH\ECommerceBundle\Repository\UniverseRepository")
+ * @ORM\Table(name="dmh_costume")
+ * @ORM\Entity(repositoryClass="DMH\ECommerceBundle\Repository\CostumeRepository")
  */
-class Universe
+class Costume
 {
     /**
      * @var int
@@ -29,11 +30,20 @@ class Universe
     private $name;
 
     /**
-     * @var Media
-     * @ORM\OneToOne(targetEntity="DMH\ECommerceBundle\Entity\Media", cascade={"persist", "remove"})
-     * 
+     * @var string
+     *
+     * @ORM\Column(name="slug", type="string", length=255, unique=true)
      */
-    private $thumbnail;
+    private $slug;
+
+    /**
+     * @var Universe
+     *
+     * @ORM\ManyToOne(targetEntity="DMH\ECommerceBundle\Entity\Universe")
+     * @JoinColumn(name="universe", referencedColumnName="id")
+     */
+    private $universe;
+
 
     /**
      * Get id
@@ -50,7 +60,7 @@ class Universe
      *
      * @param string $name
      *
-     * @return Universe
+     * @return Costume
      */
     public function setName($name)
     {
@@ -70,26 +80,27 @@ class Universe
     }
 
     /**
-     * Set thumbnail
+     * Set slug
      *
-     * @param \DMH\ECommerceBundle\Entity\Media $thumbnail
+     * @param string $slug
      *
-     * @return Universe
+     * @return Costume
      */
-    public function setThumbnail(\DMH\ECommerceBundle\Entity\Media $thumbnail = null)
+    public function setSlug($slug)
     {
-        $this->thumbnail = $thumbnail;
+        $this->slug = $slug;
 
         return $this;
     }
 
     /**
-     * Get thumbnail
+     * Get slug
      *
-     * @return \DMH\ECommerceBundle\Entity\Media
+     * @return string
      */
-    public function getThumbnail()
+    public function getSlug()
     {
-        return $this->thumbnail;
+        return $this->slug;
     }
 }
+

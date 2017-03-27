@@ -102,5 +102,28 @@ class Costume
     {
         return $this->slug;
     }
-}
 
+    /**
+     * Set universe
+     *
+     * @param \DMH\ECommerceBundle\Entity\Universe $universe
+     *
+     * @return Costume
+     */
+    public function setUniverse(\DMH\ECommerceBundle\Entity\Universe $universe = null)
+    {
+        $this->universe = $universe;
+
+        return $this;
+    }
+
+    /**
+     * Get universe
+     *
+     * @return \DMH\ECommerceBundle\Entity\Universe
+     */
+    public function getUniverse()
+    {
+        return $this->universe;
+    }
+}

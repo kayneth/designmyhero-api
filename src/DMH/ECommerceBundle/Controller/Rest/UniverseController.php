@@ -11,6 +11,7 @@ namespace DMH\ECommerceBundle\Controller\Rest;
 
 use DMH\ECommerceBundle\Entity\Universe;
 use DMH\ECommerceBundle\Form\CategoryType;
+use DMH\ECommerceBundle\Form\UniverseType;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\View\View;
@@ -79,25 +80,25 @@ class UniverseController extends Controller implements ClassResourceInterface
 
     /**
      * @ApiDoc(
-     *    description="Create a category",
-     *    input={"class"=ProductType::class, "name"=""},
+     *    description="Create a new universe type",
+     *    input={"class"=UniverseType::class, "name"=""},
      *    statusCodes = {
      *        201 = "Created successfully",
      *        400 = "Invalid Form"
      *    },
      *    responseMap={
-     *         201 = {"class"=Product::class, "groups"={""}},
-     *         400 = { "class"=ProductType::class, "form_errors"=true, "name" = ""}
+     *         201 = {"class"=Universe::class, "groups"={""}},
+     *         400 = { "class"=UniverseType::class, "form_errors"=true, "name" = ""}
      *    }
      * )
      *
      * @Rest\View(statusCode=Response::HTTP_CREATED, serializerGroups={""})
-     * @Rest\Post("/categories")
+     * @Rest\Post("/universes")
      */
     public function postAction(Request $request)
     {
         $universe = new Universe();
-        $form = $this->createForm(CategoryType::class, $universe);
+        $form = $this->createForm(UniverseType::class, $universe);
 
         $data = $request->request->all();
 

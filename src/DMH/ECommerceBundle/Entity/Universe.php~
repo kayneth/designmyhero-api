@@ -68,28 +68,5 @@ class Universe
     {
         return $this->name;
     }
-
-    /**
-     * Set thumbnail
-     *
-     * @param \DMH\ECommerceBundle\Entity\Media $thumbnail
-     *
-     * @return Universe
-     */
-    public function setThumbnail(\DMH\ECommerceBundle\Entity\Media $thumbnail = null)
-    {
-        $this->thumbnail = $thumbnail;
-
-        return $this;
-    }
-
-    /**
-     * Get thumbnail
-     *
-     * @return \DMH\ECommerceBundle\Entity\Media
-     */
-    public function getThumbnail()
-    {
-        return $this->thumbnail;
-    }
 }
+

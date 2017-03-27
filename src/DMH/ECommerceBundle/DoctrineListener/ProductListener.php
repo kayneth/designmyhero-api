@@ -21,5 +21,7 @@ class ProductListener
         /* @var Product $entity */
         $entity->setThumbnailDir();
         $entity->getThumbnail()->upload();
+        $entity->setPatternDir();
+        $entity->getPattern()->upload();
     }
 }

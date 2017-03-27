@@ -18,7 +18,10 @@ class ProductType extends AbstractType
             ->add('enabled')
             ->add('price')
             ->add('description')
+            ->add('category')
+            ->add('costume')
             ->add('thumbnail', FileUploadType::class)
+            ->add('pattern', FileUploadType::class)
         ;
     }
     
