@@ -53,3 +53,10 @@ http://danielkummer.github.io/git-flow-cheatsheet/index.fr_FR.html
 
 * https://github.com/mgonto/restangular - Restangular
 * https://github.com/marmelab/ng-admin - ng-admin
+
+
+### TO DO
+https://www.developpez.net/forums/d1159168/php/bibliotheques-frameworks/symfony/upload-fichier-zip-decompresser/
+http://stackoverflow.com/questions/29890729/symfony-2-unzip-a-zip-file-upload-folder-permissions
+https://www.theodo.fr/blog/2015/07/manage-multiple-files-upload-in-symfony/
+https://gist.github.com/beberlei/978346

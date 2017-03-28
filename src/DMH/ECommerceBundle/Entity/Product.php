@@ -18,7 +18,7 @@ use JMS\Serializer\Annotation\SerializedName;
  *
  * @ORM\Table(name="dmh_product")
  * @ORM\Entity(repositoryClass="DMH\ECommerceBundle\Repository\ProductRepository")
- * @ORM\HasLifecycleCallbacks
+ * @ORM\HasLifecycleCallbacks()
  * @ExclusionPolicy("all")
  */
 class Product
@@ -94,9 +94,12 @@ class Product
     private $costume;
 
     /**
-     * @var
+     * @var Media
+     * @ORM\OneToOne(targetEntity="DMH\ECommerceBundle\Entity\Media", cascade={"persist", "remove"})
+     * @Expose
      */
     private $model3D;
+    private $model3DPattern;
 
     /**
      * @var Media
@@ -105,6 +108,13 @@ class Product
      */
     private $pattern;
     private $patternDir;
+
+    private $productDir;
+
+    public function __construct()
+    {
+        $this->setProductDir();
+    }
 
 
     /**
@@ -288,18 +298,134 @@ class Product
         }
         return $this->thumbnail;
     }
+
+    /**
+     * Set pattern
+     *
+     * @param \DMH\ECommerceBundle\Entity\Media $pattern
+     *
+     * @return Product
+     */
+    public function setPattern(\DMH\ECommerceBundle\Entity\Media $pattern = null)
+    {
+        $this->pattern = $pattern;
+        if ($this->pattern != null) {
+            $this->setPatternDir();
+        }
+        return $this;
+    }
+
+    /**
+     * Get pattern
+     *
+     * @return \DMH\ECommerceBundle\Entity\Media
+     */
+    public function getPattern()
+    {
+        if ($this->pattern != null) {
+            $this->setPatternDir();
+        }
+        return $this->pattern;
+    }
+
+
+    /**
+     * Set model3D
+     *
+     * @param \DMH\ECommerceBundle\Entity\Media $model3D
+     *
+     * @return Product
+     */
+    public function setModel3D(\DMH\ECommerceBundle\Entity\Media $model3D = null)
+    {
+        $this->model3D = $model3D;
+
+        return $this;
+    }
+
+    /**
+     * Get model3D
+     *
+     * @return \DMH\ECommerceBundle\Entity\Media
+     */
+    public function getModel3D()
+    {
+        return $this->model3D;
+    }
+
+    public function getProductDir()
+    {
+        return $this->productDir;
+    }
+
+    /**
+     * @ORM\PostLoad()
+     */
+    public function setProductDir($dir = null)
+    {
+        if($dir == null)
+        {
+            $universe = $this->getCostume()->getUniverse()->getId();
+            $costume = $this->getCostume()->getId();
+            $this->productDir = "uploads/models/".$universe."/costumes/".$costume."/products/".$this->id;
+        }else{
+            $this->dir = $dir;
+        }
+        return $this;
+
+    }
+
     /**
      * @ORM\PostPersist()
      * @ORM\PostUpdate()
      */
     public function setThumbnailDir()
     {
-        $this->thumbnailDir = "uploads/products/".$this->id."/image";
+        if($this->productDir == null)
+        {
+            $this->setProductDir();
+        }
+        $this->thumbnailDir = $this->productDir."/image";
         if ($this->thumbnail != null) {
             $this->thumbnail->setUploadDir($this->thumbnailDir);
         }
         return $this;
     }
+
+    /**
+     * @ORM\PostPersist()
+     * @ORM\PostUpdate()
+     */
+    public function setPatternDir()
+    {
+        if($this->productDir == null)
+        {
+            $this->setProductDir();
+        }
+        $this->patternDir = $this->productDir."/pattern";
+        if ($this->pattern != null) {
+            $this->pattern->setUploadDir($this->patternDir);
+        }
+        return $this;
+    }
+
+    /**
+     * @ORM\PostPersist()
+     * @ORM\PostUpdate()
+     */
+    public function setModel3DDir()
+    {
+        if($this->productDir == null)
+        {
+            $this->setProductDir();
+        }
+        $this->patternDir = $this->productDir."/model";
+        if ($this->pattern != null) {
+            $this->pattern->setUploadDir($this->patternDir);
+        }
+        return $this;
+    }
+
     /**
      * @VirtualProperty
      * @SerializedName("thumbnailLink")
@@ -318,41 +444,19 @@ class Product
     }
 
     /**
-     * Set pattern
+     * @VirtualProperty
+     * @SerializedName("patternLink")
      *
-     * @param \DMH\ECommerceBundle\Entity\Media $pattern
-     *
-     * @return Product
+     * @return string
      */
-    public function setPattern(\DMH\ECommerceBundle\Entity\Media $pattern = null)
+    public function getPatternLink()
     {
-        $this->pattern = $pattern;
-
-        return $this;
-    }
-
-    /**
-     * Get pattern
-     *
-     * @return \DMH\ECommerceBundle\Entity\Media
-     */
-    public function getPattern()
-    {
-        return $this->pattern;
-    }
-
-    /**
-     * @ORM\PostPersist()
-     * @ORM\PostUpdate()
-     */
-    public function setPatternDir()
-    {
-        $this->patternDir = "uploads/products/".$this->id."/pattern";
-        if ($this->pattern != null) {
-            $this->pattern->setUploadDir($this->patternDir);
+        if($this->pattern != null)
+        {
+            $this->setPatternDir();
+            $dir = $this->pattern->getWebPath();
+            return $dir;
         }
-        return $this;
+        return $dir = null;
     }
-
-
 }

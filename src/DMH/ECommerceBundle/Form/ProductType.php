@@ -22,6 +22,7 @@ class ProductType extends AbstractType
             ->add('costume')
             ->add('thumbnail', FileUploadType::class)
             ->add('pattern', FileUploadType::class)
+            ->add('model3D', FileUploadType::class)
         ;
     }
     

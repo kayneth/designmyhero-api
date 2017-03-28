@@ -23,5 +23,16 @@ class ProductListener
         $entity->getThumbnail()->upload();
         $entity->setPatternDir();
         $entity->getPattern()->upload();
+//        switch ($entity->getModel()){
+//            case "multiple":
+//                break;
+//            case "unique":
+//                break;
+//            case "zip":
+//                break;
+//            default:
+//
+//
+//        }
     }
 }

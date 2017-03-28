@@ -107,6 +107,9 @@ class ProductController extends Controller implements ClassResourceInterface
         $patternFile = $request->files->get('pattern');
         $submitted['thumbnail']['file'] = $thumbnailFile;
         $submitted['pattern']['file'] = $patternFile;
+        //Gérer 3 cas : Upload de fichier unique, de fichiers multiples, de zip
+        //Choisir sur le formulaire et adapter la méthode d'upload selon le cas
+
         $form->submit($submitted);
 
         if ($form->isValid()) {
@@ -163,6 +166,35 @@ class ProductController extends Controller implements ClassResourceInterface
         }
     }
 
+    public function patchAction(Request $request, Product $product)
+    {
+        $form = $this->createForm(ProductType::class, $product);
+        $data = $request->request->all();
+
+        $submitted = array();
+
+        foreach($data as $key => $item) {
+            if($key != "_format"){
+                $submitted[$key] = $item;
+            }
+        }
+
+        $file = $request->files->get('image');
+        $submitted['image']['file'] = $file;
+
+        $form->submit($submitted);
+
+        if ($form->isValid()) {
+
+            $em = $this->getDoctrine()->getManager();
+            $em->flush();
+            return array('product' => $product);
+
+        }else{
+            return $form;
+        }
+    }
+
     /**
      * @ApiDoc(
      *
@@ -178,6 +210,16 @@ class ProductController extends Controller implements ClassResourceInterface
             $em->remove($product);
             $em->flush();
         }
+    }
+
+    private function addFilesToForm($files, $data)
+    {
+        $file = $request->files->get('image');
+        $file = $request->files->get('pattern');
+        $file = $request->files->get('model3D');
+        $data['image']['file'] = $file;
+        $data['pattern']['file'] = $file;
+        $data['model3D']['file'] = $file;
     }
 
 }

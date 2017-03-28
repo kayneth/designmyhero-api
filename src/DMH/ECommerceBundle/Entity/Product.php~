@@ -19,7 +19,7 @@ use JMS\Serializer\Annotation\SerializedName;
  * @ORM\Table(name="dmh_product")
  * @ORM\Entity(repositoryClass="DMH\ECommerceBundle\Repository\ProductRepository")
  * @ORM\HasLifecycleCallbacks
- * @ExclusionPolicy("none")
+ * @ExclusionPolicy("all")
  */
 class Product
 {
@@ -94,7 +94,9 @@ class Product
     private $costume;
 
     /**
-     * @var
+     * @var Media
+     * @ORM\OneToOne(targetEntity="DMH\ECommerceBundle\Entity\Media", cascade={"persist", "remove"})
+     * @Expose
      */
     private $model3D;
 
@@ -214,6 +216,54 @@ class Product
     }
 
     /**
+     * Set category
+     *
+     * @param \DMH\ECommerceBundle\Entity\Category $category
+     *
+     * @return Product
+     */
+    public function setCategory(\DMH\ECommerceBundle\Entity\Category $category = null)
+    {
+        $this->category = $category;
+
+        return $this;
+    }
+
+    /**
+     * Get category
+     *
+     * @return \DMH\ECommerceBundle\Entity\Category
+     */
+    public function getCategory()
+    {
+        return $this->category;
+    }
+
+    /**
+     * Set costume
+     *
+     * @param \DMH\ECommerceBundle\Entity\Costume $costume
+     *
+     * @return Product
+     */
+    public function setCostume(\DMH\ECommerceBundle\Entity\Costume $costume = null)
+    {
+        $this->costume = $costume;
+
+        return $this;
+    }
+
+    /**
+     * Get costume
+     *
+     * @return \DMH\ECommerceBundle\Entity\Costume
+     */
+    public function getCostume()
+    {
+        return $this->costume;
+    }
+
+    /**
      * Set thumbnail
      *
      * @param \DMH\ECommerceBundle\Entity\Media $thumbnail
@@ -270,6 +320,30 @@ class Product
     }
 
     /**
+     * Set pattern
+     *
+     * @param \DMH\ECommerceBundle\Entity\Media $pattern
+     *
+     * @return Product
+     */
+    public function setPattern(\DMH\ECommerceBundle\Entity\Media $pattern = null)
+    {
+        $this->pattern = $pattern;
+
+        return $this;
+    }
+
+    /**
+     * Get pattern
+     *
+     * @return \DMH\ECommerceBundle\Entity\Media
+     */
+    public function getPattern()
+    {
+        return $this->pattern;
+    }
+
+    /**
      * @ORM\PostPersist()
      * @ORM\PostUpdate()
      */
@@ -281,5 +355,6 @@ class Product
         }
         return $this;
     }
-}
 
+
+}

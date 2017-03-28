@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Table(name="dmh_media")
  * @ORM\Entity(repositoryClass="DMH\ECommerceBundle\Repository\MediaRepository")
- * @ORM\HasLifecycleCallbacks
+ * @ORM\HasLifecycleCallbacks()
  */
 class Media
 {
@@ -55,6 +55,20 @@ class Media
      */
     private $file;
 
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="size", type="integer")
+     */
+    private $size;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="mime_type", type="string")
+     */
+    private $mimeType;
+
     // On ajoute cet attribut pour y stocker le nom du fichier temporairement
     private $tempFilename;
 
@@ -81,6 +95,8 @@ class Media
         $this->filename = $this->file->getClientOriginalName();
         // Et on génère l'attribut alt de la balise <img>, à la valeur du nom du fichier sur le PC de l'internaute
         $this->alt = $this->file->getClientOriginalName();
+        $this->size = $this->file->getClientSize();
+        $this->mimeType = $this->file->getMimeType();
     }
     /**
      * //@ORM\PostPersist()
