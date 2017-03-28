@@ -103,6 +103,7 @@ class ProductController extends Controller implements ClassResourceInterface
             }
         }
 
+        //$this->addFilesToForm($request->files->all());
         $thumbnailFile = $request->files->get('thumbnail');
         $patternFile = $request->files->get('pattern');
         $submitted['thumbnail']['file'] = $thumbnailFile;
