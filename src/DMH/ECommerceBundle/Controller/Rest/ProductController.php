@@ -222,6 +222,10 @@ class ProductController extends Controller implements ClassResourceInterface
      */
     public function getModelAction($id)
     {
+        //https://github.com/whiteoctober/Pagerfanta PAGINATION A PEUT ETRE UTILISER
+        //http://stackoverflow.com/questions/26661201/symfony2-image-path-in-controller
+        //https://github.com/willdurand/Hateoas#introduction
+        //http://symfony.com/doc/current/components/http_foundation.html
         
     }
 
