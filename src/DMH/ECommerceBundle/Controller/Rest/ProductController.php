@@ -2,6 +2,7 @@
 
 namespace DMH\ECommerceBundle\Controller\Rest;
 
+use DMH\ECommerceBundle\DoctrineListener\ProductRemoveListener;
 use DMH\ECommerceBundle\Entity\Product;
 use DMH\ECommerceBundle\Form\ProductType;
 use FOS\RestBundle\Routing\ClassResourceInterface;
@@ -103,15 +104,11 @@ class ProductController extends Controller implements ClassResourceInterface
             }
         }
 
-        //$this->addFilesToForm($request->files->all());
-        $thumbnailFile = $request->files->get('thumbnail');
-        $patternFile = $request->files->get('pattern');
-        $submitted['thumbnail']['file'] = $thumbnailFile;
-        $submitted['pattern']['file'] = $patternFile;
+        $dataWithFiles = $this->addFilesToForm($request->files->all(), $submitted);
         //Gérer 3 cas : Upload de fichier unique, de fichiers multiples, de zip
         //Choisir sur le formulaire et adapter la méthode d'upload selon le cas
 
-        $form->submit($submitted);
+        $form->submit($dataWithFiles);
 
         if ($form->isValid()) {
 
@@ -151,10 +148,9 @@ class ProductController extends Controller implements ClassResourceInterface
             }
         }
 
-        $file = $request->files->get('image');
-        $submitted['image']['file'] = $file;
+        $dataWithFiles = $this->addFilesToForm($request->files->all(), $submitted);
 
-        $form->submit($submitted);
+        $form->submit($dataWithFiles);
 
         if ($form->isValid()) {
 
@@ -180,10 +176,9 @@ class ProductController extends Controller implements ClassResourceInterface
             }
         }
 
-        $file = $request->files->get('image');
-        $submitted['image']['file'] = $file;
+        $dataWithFiles = $this->addFilesToForm($request->files->all(), $submitted);
 
-        $form->submit($submitted);
+        $form->submit($dataWithFiles);
 
         if ($form->isValid()) {
 
@@ -208,19 +203,38 @@ class ProductController extends Controller implements ClassResourceInterface
         /* @var $product Product */
         $em = $this->get('doctrine.orm.entity_manager');
         if ($product) {
+
+            $dir = $product->setProductDir()->getProductDir();
+
             $em->remove($product);
             $em->flush();
+
+            /* @var ProductRemoveListener $dirRemover */
+            $dirRemover = $this->get("dmh_ecommerce.product.directory_remover");
+            $dirRemover->removeProductDir($dir);
         }
+    }
+
+    /**
+     * @ApiDoc(
+     *
+     * )
+     */
+    public function getModelAction($id)
+    {
+        
     }
 
     private function addFilesToForm($files, $data)
     {
-        $file = $request->files->get('image');
-        $file = $request->files->get('pattern');
-        $file = $request->files->get('model3D');
-        $data['image']['file'] = $file;
-        $data['pattern']['file'] = $file;
-        $data['model3D']['file'] = $file;
+        $image  = $files['thumbnail'];
+        $pattern = $files['pattern'];
+        $model3D = $files['model3D'];
+        $data['thumbnail']['file'] = $image;
+        $data['pattern']['file'] = $pattern;
+        $data['model3D']['file'] = $model3D;
+
+        return $data;
     }
 
 }

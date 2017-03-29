@@ -9,3 +9,18 @@ services:
         arguments: []
         tags:
           - { name: doctrine.event_listener, event: postPersist }
+
+#    dmh_ecommerce.doctrine_listener.product.pre_delete:
+#        class: DMH\ECommerceBundle\DoctrineListener\ProductRemoveListener
+#        arguments: []
+#        tags:
+#          - { name: doctrine.event_listener, event: preRemove }
+#
+#    dmh_ecommerce.doctrine_listener.product.post_delete:
+#            class: DMH\ECommerceBundle\DoctrineListener\ProductRemoveListener
+#            arguments: []
+#            tags:
+#              - { name: doctrine.event_listener, event: postRemove }
+
+    dmh_ecommerce.product.directory_remover:
+        class: DMH\ECommerceBundle\DoctrineListener\ProductRemoveListener

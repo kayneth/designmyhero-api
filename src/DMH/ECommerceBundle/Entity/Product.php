@@ -12,6 +12,7 @@ use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\AccessorOrder;
 use JMS\Serializer\Annotation\SerializedName;
+use Hateoas\Configuration\Annotation as Hateoas;
 
 /**
  * Product
@@ -20,6 +21,15 @@ use JMS\Serializer\Annotation\SerializedName;
  * @ORM\Entity(repositoryClass="DMH\ECommerceBundle\Repository\ProductRepository")
  * @ORM\HasLifecycleCallbacks()
  * @ExclusionPolicy("all")
+ *
+ *
+ *  @Hateoas\Relation(
+ *      "model",
+ *      href = @Hateoas\Route(
+ *          "api_get_product_model",
+ *          parameters = { "id" = "expr(object.getId())" }
+ *      )
+ * )
  */
 class Product
 {
@@ -99,7 +109,7 @@ class Product
      * @Expose
      */
     private $model3D;
-    private $model3DPattern;
+    private $model3DDir;
 
     /**
      * @var Media
@@ -113,7 +123,7 @@ class Product
 
     public function __construct()
     {
-        $this->setProductDir();
+
     }
 
 
@@ -281,9 +291,6 @@ class Product
     public function setThumbnail(\DMH\ECommerceBundle\Entity\Media $thumbnail = null)
     {
         $this->thumbnail = $thumbnail;
-        if ($this->thumbnail != null) {
-            $this->setThumbnailDir();
-        }
         return $this;
     }
     /**
@@ -309,9 +316,6 @@ class Product
     public function setPattern(\DMH\ECommerceBundle\Entity\Media $pattern = null)
     {
         $this->pattern = $pattern;
-        if ($this->pattern != null) {
-            $this->setPatternDir();
-        }
         return $this;
     }
 
@@ -350,6 +354,9 @@ class Product
      */
     public function getModel3D()
     {
+        if ($this->model3D != null) {
+            $this->setModel3DDir();
+        }
         return $this->model3D;
     }
 
@@ -359,6 +366,9 @@ class Product
     }
 
     /**
+     *
+     * @ORM\PostPersist()
+     * @ORM\PostUpdate()
      * @ORM\PostLoad()
      */
     public function setProductDir($dir = null)
@@ -419,9 +429,9 @@ class Product
         {
             $this->setProductDir();
         }
-        $this->patternDir = $this->productDir."/model";
-        if ($this->pattern != null) {
-            $this->pattern->setUploadDir($this->patternDir);
+        $this->model3DDir = $this->productDir."/model";
+        if ($this->model3D != null) {
+            $this->model3D->setUploadDir($this->model3DDir);
         }
         return $this;
     }
@@ -432,7 +442,7 @@ class Product
      *
      * @return string
      */
-    public function getThumnbnailLink()
+    public function getThumbnailLink()
     {
         if($this->thumbnail != null)
         {
@@ -455,6 +465,23 @@ class Product
         {
             $this->setPatternDir();
             $dir = $this->pattern->getWebPath();
+            return $dir;
+        }
+        return $dir = null;
+    }
+
+    /**
+     * @VirtualProperty
+     * @SerializedName("modelLink")
+     *
+     * @return string
+     */
+    public function getModel3DLink()
+    {
+        if($this->model3D != null)
+        {
+            $this->setModel3DDir();
+            $dir = $this->model3D->getWebPath();
             return $dir;
         }
         return $dir = null;

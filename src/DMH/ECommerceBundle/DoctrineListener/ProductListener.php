@@ -23,6 +23,8 @@ class ProductListener
         $entity->getThumbnail()->upload();
         $entity->setPatternDir();
         $entity->getPattern()->upload();
+        $entity->setModel3DDir();
+        $entity->getModel3D()->upload();
 //        switch ($entity->getModel()){
 //            case "multiple":
 //                break;
