@@ -27,7 +27,7 @@ use Hateoas\Configuration\Annotation as Hateoas;
  *      "model",
  *      href = @Hateoas\Route(
  *          "api_get_product_model",
- *          parameters = { "id" = "expr(object.getId())" }
+ *          parameters = { "product" = "expr(object.getId())" }
  *      )
  * )
  */
