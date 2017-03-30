@@ -94,6 +94,12 @@ lexik_jwt_authentication:
     pass_phrase:      '%jwt_key_pass_phrase%'
     token_ttl:        '%jwt_token_ttl%'
 
+gesdinet_jwt_refresh_token:
+    ttl: 2592000
+    ttl_update: true
+    firewall: refresh
+    user_provider: fos_user.user_provider.username_email
+
 fos_rest:
     routing_loader:
         default_format: json

@@ -461,7 +461,7 @@ class Product
      * @VirtualProperty
      * @SerializedName("thumbnailLink")
      *
-     * @Groups({"listProduct"})
+     * @Groups({})
      *
      * @return string
      */

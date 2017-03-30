@@ -4,6 +4,21 @@ rest :
   resource : "routing_rest.yml"
   prefix : /api
 
+dmhe_commerce:
+    resource: "@DMHECommerceBundle/Resources/config/routing.yml"
+    prefix:   /
+
+dmh_user:
+    resource: "@DMHUserBundle/Resources/config/routing.yml"
+    prefix:   /
+
+api_login_check:
+    path: /api/login_check
+
+gesdinet_jwt_refresh_token:
+    path:     /api/token/refresh
+    defaults: { _controller: gesdinet.jwtrefreshtoken:refresh }
+
 _liip_imagine:
     resource: "@LiipImagineBundle/Resources/config/routing.xml"
 
@@ -29,17 +44,9 @@ fos_user_change_password:
     resource: "@FOSUserBundle/Resources/config/routing/change_password.xml"
     prefix: /profile
 
-dmh_user:
-    resource: "@DMHUserBundle/Resources/config/routing.yml"
-    prefix:   /
-
 NelmioApiDocBundle:
     resource: "@NelmioApiDocBundle/Resources/config/routing.yml"
     prefix:   /api/doc
-
-dmhe_commerce:
-    resource: "@DMHECommerceBundle/Resources/config/routing.yml"
-    prefix:   /
 
 app:
     resource: "@AppBundle/Controller/"
