@@ -3,6 +3,18 @@ product:
     resource: DMH\ECommerceBundle\Controller\Rest\ProductController
     name_prefix:  api_
 
+product_model:
+    type:     rest
+    parent: product
+    resource: DMH\ECommerceBundle\Controller\Rest\ProductModelController
+    name_prefix:  api_
+
+product_thumbnail:
+    type:     rest
+    parent: product
+    resource: DMH\ECommerceBundle\Controller\Rest\ProductThumbnailController
+    name_prefix:  api_
+
 costume:
     type:     rest
     resource: DMH\ECommerceBundle\Controller\Rest\CostumeController

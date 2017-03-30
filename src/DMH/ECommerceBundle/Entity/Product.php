@@ -27,8 +27,20 @@ use Hateoas\Configuration\Annotation as Hateoas;
  *      "model",
  *      href = @Hateoas\Route(
  *          "api_get_product_model",
- *          parameters = { "product" = "expr(object.getId())" }
- *      )
+ *          parameters = { "id" = "expr(object.getId())" },
+ *     absolute = true
+ *      ),
+ *     exclusion = @Hateoas\Exclusion(groups = {"listProduct"})
+ * )
+ *
+ * @Hateoas\Relation(
+ *      "thumbnail",
+ *      href = @Hateoas\Route(
+ *          "api_get_product_thumbnail",
+ *          parameters = { "id" = "expr(object.getId())" },
+ *     absolute = true
+ *      ),
+ *     exclusion = @Hateoas\Exclusion(groups = {"listProduct"})
  * )
  */
 class Product
@@ -39,6 +51,7 @@ class Product
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Groups({"listProduct"})
      *
      * @Expose
      */
@@ -49,6 +62,7 @@ class Product
      *
      * @ORM\Column(name="name", type="string", length=255)
      *
+     * @Groups({"listProduct"})
      * @Expose
      */
     private $name;
@@ -57,6 +71,7 @@ class Product
      * @var bool
      *
      * @ORM\Column(name="enabled", type="boolean", nullable=true)
+     *
      */
     private $enabled;
 
@@ -73,6 +88,8 @@ class Product
      *
      * @ORM\Column(name="description", type="text", nullable=true)
      * @Expose
+     *
+     * @Groups({"listProduct"})
      */
     private $description;
 
@@ -91,6 +108,8 @@ class Product
      * @ORM\ManyToOne(targetEntity="DMH\ECommerceBundle\Entity\Category")
      * @JoinColumn(name="category", referencedColumnName="id")
      *
+     * @Groups({"listProduct"})
+     *
      */
     private $category;
 
@@ -99,6 +118,8 @@ class Product
      *
      * @ORM\ManyToOne(targetEntity="DMH\ECommerceBundle\Entity\Costume")
      * @JoinColumn(name="costume", referencedColumnName="id")
+     *
+     * @Groups({"listProduct"})
      *
      */
     private $costume;
@@ -440,6 +461,8 @@ class Product
      * @VirtualProperty
      * @SerializedName("thumbnailLink")
      *
+     * @Groups({"listProduct"})
+     *
      * @return string
      */
     public function getThumbnailLink()
@@ -456,6 +479,8 @@ class Product
     /**
      * @VirtualProperty
      * @SerializedName("patternLink")
+     *
+     * @Groups({})
      *
      * @return string
      */
@@ -474,6 +499,7 @@ class Product
      * @VirtualProperty
      * @SerializedName("modelLink")
      *
+     * @Groups({})
      * @return string
      */
     public function getModel3DLink()

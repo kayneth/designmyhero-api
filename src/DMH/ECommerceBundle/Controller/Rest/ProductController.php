@@ -44,6 +44,7 @@ class ProductController extends Controller implements ClassResourceInterface
      * )
      * @QueryParam(name="offset", requirements="\d+", default="", description="Index de début de la pagination")
      * @QueryParam(name="limit", requirements="\d+", default="", description="Nombre d'éléments à afficher")
+     * @Rest\View(serializerGroups={"listProduct"})
      */
     public function cgetAction(Request $request, ParamFetcher $paramFetcher)
     {
@@ -216,22 +217,6 @@ class ProductController extends Controller implements ClassResourceInterface
             $dirRemover = $this->get("dmh_ecommerce.product.directory_remover");
             $dirRemover->removeProductDir($dir);
         }
-    }
-
-    /**
-     * @ApiDoc(
-     *
-     * )
-     */
-    public function getModelAction(Product $product)
-    {
-
-        $path = $product->getModel3DLink();
-        return $this->file($path);
-        //https://github.com/whiteoctober/Pagerfanta PAGINATION A PEUT ETRE UTILISER
-        //http://stackoverflow.com/questions/26661201/symfony2-image-path-in-controller
-        //https://github.com/willdurand/Hateoas#introduction
-        //http://symfony.com/doc/current/components/http_foundation.html
     }
 
     private function addFilesToForm($files, $data)
