@@ -226,7 +226,7 @@ class ProductController extends Controller implements ClassResourceInterface
         //http://stackoverflow.com/questions/26661201/symfony2-image-path-in-controller
         //https://github.com/willdurand/Hateoas#introduction
         //http://symfony.com/doc/current/components/http_foundation.html
-        
+
     }
 
     private function addFilesToForm($files, $data)
