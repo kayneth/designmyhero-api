@@ -3,12 +3,16 @@
 namespace DMH\ECommerceBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
 
 /**
  * Category
  *
  * @ORM\Table(name="dmh_category")
  * @ORM\Entity(repositoryClass="DMH\ECommerceBundle\Repository\CategoryRepository")
+ * @ExclusionPolicy("none")
  */
 class Category
 {
@@ -18,6 +22,9 @@ class Category
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     *
+     * @Groups({"listProduct"})
+     *
      */
     private $id;
 
@@ -25,6 +32,9 @@ class Category
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=255)
+     *
+     * @Groups({"listProduct"})
+     * @Expose
      */
     private $name;
 

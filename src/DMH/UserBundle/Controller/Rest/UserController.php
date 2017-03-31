@@ -6,6 +6,7 @@ use DMH\UserBundle\Entity\User;
 use DMH\UserBundle\Form\UserType;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\View\View;
+use FOS\UserBundle\Form\Type\RegistrationFormType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -75,14 +76,14 @@ class UserController extends Controller implements ClassResourceInterface
     /**
      * @ApiDoc(
      *    description="Create an user",
-     *    input={"class"=UserType::class, "name"=""},
+     *    input={"class"=RegistrationFormType::class, "name"=""},
      *    statusCodes = {
      *        201 = "Created successfully",
      *        400 = "Invalid Form"
      *    },
      *    responseMap={
      *         201 = {"class"=User::class, "groups"={""}},
-     *         400 = { "class"=UserType::class, "form_errors"=true, "name" = ""}
+     *         400 = { "class"=RegistrationFormType::class, "form_errors"=true, "name" = ""}
      *    }
      * )
      *
@@ -92,7 +93,7 @@ class UserController extends Controller implements ClassResourceInterface
     public function postAction(Request $request)
     {
         $user = new User();
-        $form = $this->createForm(UserType::class, $user);
+        $form = $this->createForm(RegistrationFormType::class, $user);
 
         $data = $request->request->all();
 
@@ -103,8 +104,6 @@ class UserController extends Controller implements ClassResourceInterface
             }
         }
 
-        $file = $request->files->get('thumbnail');
-        $submitted['thumbnail']['file'] = $file;
         $form->submit($submitted);
 
         if ($form->isValid()) {

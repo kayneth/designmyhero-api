@@ -51,6 +51,7 @@ class Product
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     *
      * @Groups({"listProduct"})
      *
      * @Expose
@@ -109,6 +110,7 @@ class Product
      * @JoinColumn(name="category", referencedColumnName="id")
      *
      * @Groups({"listProduct"})
+     * @Expose
      *
      */
     private $category;
@@ -119,6 +121,7 @@ class Product
      * @ORM\ManyToOne(targetEntity="DMH\ECommerceBundle\Entity\Costume")
      * @JoinColumn(name="costume", referencedColumnName="id")
      *
+     * @Expose
      * @Groups({"listProduct"})
      *
      */

@@ -4,11 +4,17 @@ namespace DMH\ECommerceBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
+
 /**
  * Universe
  *
  * @ORM\Table(name="dmh_universe")
  * @ORM\Entity(repositoryClass="DMH\ECommerceBundle\Repository\UniverseRepository")
+ *
+ * @ExclusionPolicy("none")
  */
 class Universe
 {
@@ -18,6 +24,8 @@ class Universe
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     *
+     * @Groups({"listProduct"})
      */
     private $id;
 
@@ -25,6 +33,8 @@ class Universe
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=255)
+     *
+     * @Groups({"listProduct"})
      */
     private $name;
 
