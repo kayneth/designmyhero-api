@@ -109,6 +109,8 @@ class UniverseController extends Controller implements ClassResourceInterface
             }
         }
 
+        $image = $request->files->get('thumbnail');
+        $submitted['thumbnail']['file'] = $image;
         $form->submit($submitted);
 
         if ($form->isValid()) {
@@ -149,6 +151,8 @@ class UniverseController extends Controller implements ClassResourceInterface
             }
         }
 
+        $image = $request->files->get('thumbnail');
+        $submitted['thumbnail']['file'] = $image;
         $form->submit($submitted);
 
         if ($form->isValid()) {

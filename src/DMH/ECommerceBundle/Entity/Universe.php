@@ -13,6 +13,7 @@ use JMS\Serializer\Annotation\Expose;
  *
  * @ORM\Table(name="dmh_universe")
  * @ORM\Entity(repositoryClass="DMH\ECommerceBundle\Repository\UniverseRepository")
+ * @ORM\HasLifecycleCallbacks()
  *
  * @ExclusionPolicy("none")
  */
@@ -44,6 +45,7 @@ class Universe
      * 
      */
     private $thumbnail;
+    private $thumbnailDir;
 
     /**
      * Get id
@@ -101,5 +103,18 @@ class Universe
     public function getThumbnail()
     {
         return $this->thumbnail;
+    }
+
+    /**
+     * @ORM\PostPersist()
+     * @ORM\PostUpdate()
+     */
+    public function setThumbnailDir()
+    {
+        $this->thumbnailDir = "uploads/models/".$this->getId()."/image";
+        if ($this->thumbnail != null) {
+            $this->thumbnail->setUploadDir($this->thumbnailDir);
+        }
+        return $this;
     }
 }

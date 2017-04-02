@@ -10,6 +10,12 @@ services:
         tags:
           - { name: doctrine.event_listener, event: postPersist }
 
+    dmh_ecommerce.doctrine_listener.universe.post_persist:
+        class: DMH\ECommerceBundle\DoctrineListener\UniverseCreationListener
+        arguments: []
+        tags:
+          - { name: doctrine.event_listener, event: postPersist }
+
 #    dmh_ecommerce.doctrine_listener.product.pre_delete:
 #        class: DMH\ECommerceBundle\DoctrineListener\ProductRemoveListener
 #        arguments: []

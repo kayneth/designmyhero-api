@@ -401,7 +401,8 @@ class Product
         {
             $universe = $this->getCostume()->getUniverse()->getId();
             $costume = $this->getCostume()->getId();
-            $this->productDir = "uploads/models/".$universe."/costumes/".$costume."/products/".$this->id;
+            $category = $this->getCategory()->getId();
+            $this->productDir = "uploads/models/"   .$universe."/costumes/".$costume."/categories/".$category."/products/".$this->id;
         }else{
             $this->dir = $dir;
         }

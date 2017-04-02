@@ -12,14 +12,36 @@ use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\AccessorOrder;
 use JMS\Serializer\Annotation\SerializedName;
+use Hateoas\Configuration\Annotation as Hateoas;
 
 /**
  * Product
  *
  * @ORM\Table(name="dmh_product")
  * @ORM\Entity(repositoryClass="DMH\ECommerceBundle\Repository\ProductRepository")
- * @ORM\HasLifecycleCallbacks
+ * @ORM\HasLifecycleCallbacks()
  * @ExclusionPolicy("all")
+ *
+ *
+ *  @Hateoas\Relation(
+ *      "model",
+ *      href = @Hateoas\Route(
+ *          "api_get_product_model",
+ *          parameters = { "id" = "expr(object.getId())" },
+ *     absolute = true
+ *      ),
+ *     exclusion = @Hateoas\Exclusion(groups = {"listProduct"})
+ * )
+ *
+ * @Hateoas\Relation(
+ *      "thumbnail",
+ *      href = @Hateoas\Route(
+ *          "api_get_product_thumbnail",
+ *          parameters = { "id" = "expr(object.getId())" },
+ *     absolute = true
+ *      ),
+ *     exclusion = @Hateoas\Exclusion(groups = {"listProduct"})
+ * )
  */
 class Product
 {
@@ -30,6 +52,8 @@ class Product
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      *
+     * @Groups({"listProduct"})
+     *
      * @Expose
      */
     private $id;
@@ -39,6 +63,7 @@ class Product
      *
      * @ORM\Column(name="name", type="string", length=255)
      *
+     * @Groups({"listProduct"})
      * @Expose
      */
     private $name;
@@ -47,6 +72,7 @@ class Product
      * @var bool
      *
      * @ORM\Column(name="enabled", type="boolean", nullable=true)
+     *
      */
     private $enabled;
 
@@ -63,6 +89,8 @@ class Product
      *
      * @ORM\Column(name="description", type="text", nullable=true)
      * @Expose
+     *
+     * @Groups({"listProduct"})
      */
     private $description;
 
@@ -81,6 +109,9 @@ class Product
      * @ORM\ManyToOne(targetEntity="DMH\ECommerceBundle\Entity\Category")
      * @JoinColumn(name="category", referencedColumnName="id")
      *
+     * @Groups({"listProduct"})
+     * @Expose
+     *
      */
     private $category;
 
@@ -89,6 +120,9 @@ class Product
      *
      * @ORM\ManyToOne(targetEntity="DMH\ECommerceBundle\Entity\Costume")
      * @JoinColumn(name="costume", referencedColumnName="id")
+     *
+     * @Expose
+     * @Groups({"listProduct"})
      *
      */
     private $costume;
@@ -99,6 +133,7 @@ class Product
      * @Expose
      */
     private $model3D;
+    private $model3DDir;
 
     /**
      * @var Media
@@ -107,6 +142,13 @@ class Product
      */
     private $pattern;
     private $patternDir;
+
+    private $productDir;
+
+    public function __construct()
+    {
+
+    }
 
 
     /**
@@ -273,9 +315,6 @@ class Product
     public function setThumbnail(\DMH\ECommerceBundle\Entity\Media $thumbnail = null)
     {
         $this->thumbnail = $thumbnail;
-        if ($this->thumbnail != null) {
-            $this->setThumbnailDir();
-        }
         return $this;
     }
     /**
@@ -290,34 +329,6 @@ class Product
         }
         return $this->thumbnail;
     }
-    /**
-     * @ORM\PostPersist()
-     * @ORM\PostUpdate()
-     */
-    public function setThumbnailDir()
-    {
-        $this->thumbnailDir = "uploads/products/".$this->id."/image";
-        if ($this->thumbnail != null) {
-            $this->thumbnail->setUploadDir($this->thumbnailDir);
-        }
-        return $this;
-    }
-    /**
-     * @VirtualProperty
-     * @SerializedName("thumbnailLink")
-     *
-     * @return string
-     */
-    public function getThumnbnailLink()
-    {
-        if($this->thumbnail != null)
-        {
-            $this->setThumbnailDir();
-            $dir = $this->thumbnail->getWebPath();
-            return $dir;
-        }
-        return $dir = null;
-    }
 
     /**
      * Set pattern
@@ -329,7 +340,6 @@ class Product
     public function setPattern(\DMH\ECommerceBundle\Entity\Media $pattern = null)
     {
         $this->pattern = $pattern;
-
         return $this;
     }
 
@@ -340,7 +350,81 @@ class Product
      */
     public function getPattern()
     {
+        if ($this->pattern != null) {
+            $this->setPatternDir();
+        }
         return $this->pattern;
+    }
+
+
+    /**
+     * Set model3D
+     *
+     * @param \DMH\ECommerceBundle\Entity\Media $model3D
+     *
+     * @return Product
+     */
+    public function setModel3D(\DMH\ECommerceBundle\Entity\Media $model3D = null)
+    {
+        $this->model3D = $model3D;
+
+        return $this;
+    }
+
+    /**
+     * Get model3D
+     *
+     * @return \DMH\ECommerceBundle\Entity\Media
+     */
+    public function getModel3D()
+    {
+        if ($this->model3D != null) {
+            $this->setModel3DDir();
+        }
+        return $this->model3D;
+    }
+
+    public function getProductDir()
+    {
+        return $this->productDir;
+    }
+
+    /**
+     *
+     * @ORM\PostPersist()
+     * @ORM\PostUpdate()
+     * @ORM\PostLoad()
+     */
+    public function setProductDir($dir = null)
+    {
+        if($dir == null)
+        {
+            $universe = $this->getCostume()->getUniverse()->getId();
+            $costume = $this->getCostume()->getId();
+            $category = $this->getCategory()->getId();
+            $this->productDir = "uploads/models/"   .$universe."/costumes/".$costume."/categories/".$category."/products/".$this->id;
+        }else{
+            $this->dir = $dir;
+        }
+        return $this;
+
+    }
+
+    /**
+     * @ORM\PostPersist()
+     * @ORM\PostUpdate()
+     */
+    public function setThumbnailDir()
+    {
+        if($this->productDir == null)
+        {
+            $this->setProductDir();
+        }
+        $this->thumbnailDir = $this->productDir."/image";
+        if ($this->thumbnail != null) {
+            $this->thumbnail->setUploadDir($this->thumbnailDir);
+        }
+        return $this;
     }
 
     /**
@@ -349,12 +433,87 @@ class Product
      */
     public function setPatternDir()
     {
-        $this->patternDir = "uploads/products/".$this->id."/pattern";
+        if($this->productDir == null)
+        {
+            $this->setProductDir();
+        }
+        $this->patternDir = $this->productDir."/pattern";
         if ($this->pattern != null) {
             $this->pattern->setUploadDir($this->patternDir);
         }
         return $this;
     }
 
+    /**
+     * @ORM\PostPersist()
+     * @ORM\PostUpdate()
+     */
+    public function setModel3DDir()
+    {
+        if($this->productDir == null)
+        {
+            $this->setProductDir();
+        }
+        $this->model3DDir = $this->productDir."/model";
+        if ($this->model3D != null) {
+            $this->model3D->setUploadDir($this->model3DDir);
+        }
+        return $this;
+    }
 
+    /**
+     * @VirtualProperty
+     * @SerializedName("thumbnailLink")
+     *
+     * @Groups({})
+     *
+     * @return string
+     */
+    public function getThumbnailLink()
+    {
+        if($this->thumbnail != null)
+        {
+            $this->setThumbnailDir();
+            $dir = $this->thumbnail->getWebPath();
+            return $dir;
+        }
+        return $dir = null;
+    }
+
+    /**
+     * @VirtualProperty
+     * @SerializedName("patternLink")
+     *
+     * @Groups({})
+     *
+     * @return string
+     */
+    public function getPatternLink()
+    {
+        if($this->pattern != null)
+        {
+            $this->setPatternDir();
+            $dir = $this->pattern->getWebPath();
+            return $dir;
+        }
+        return $dir = null;
+    }
+
+    /**
+     * @VirtualProperty
+     * @SerializedName("modelLink")
+     *
+     * @Groups({})
+     * @return string
+     */
+    public function getModel3DLink()
+    {
+        if($this->model3D != null)
+        {
+            $this->setModel3DDir();
+            $dir = $this->model3D->getWebPath();
+            return $dir;
+        }
+        return $dir = null;
+    }
 }

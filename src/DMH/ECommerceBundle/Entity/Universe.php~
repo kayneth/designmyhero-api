@@ -4,11 +4,18 @@ namespace DMH\ECommerceBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
+
 /**
  * Universe
  *
  * @ORM\Table(name="dmh_universe")
  * @ORM\Entity(repositoryClass="DMH\ECommerceBundle\Repository\UniverseRepository")
+ * @ORM\HasLifecycleCallbacks()
+ *
+ * @ExclusionPolicy("none")
  */
 class Universe
 {
@@ -18,6 +25,8 @@ class Universe
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     *
+     * @Groups({"listProduct"})
      */
     private $id;
 
@@ -25,6 +34,8 @@ class Universe
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=255)
+     *
+     * @Groups({"listProduct"})
      */
     private $name;
 
@@ -34,6 +45,7 @@ class Universe
      * 
      */
     private $thumbnail;
+    private $thumbnailDir;
 
     /**
      * Get id
@@ -68,5 +80,41 @@ class Universe
     {
         return $this->name;
     }
-}
 
+    /**
+     * Set thumbnail
+     *
+     * @param \DMH\ECommerceBundle\Entity\Media $thumbnail
+     *
+     * @return Universe
+     */
+    public function setThumbnail(\DMH\ECommerceBundle\Entity\Media $thumbnail = null)
+    {
+        $this->thumbnail = $thumbnail;
+
+        return $this;
+    }
+
+    /**
+     * Get thumbnail
+     *
+     * @return \DMH\ECommerceBundle\Entity\Media
+     */
+    public function getThumbnail()
+    {
+        return $this->thumbnail;
+    }
+
+    /**
+     * @ORM\PostPersist()
+     * @ORM\PostUpdate()
+     */
+    public function setThumbnailDir()
+    {
+        $this->thumbnailDir = "uploads/models/".$this->getId()."/image";
+        if ($this->thumbnail != null) {
+            $this->thumbnail->setUploadDir($this->thumbnailDir);
+        }
+        return $this;
+    }
+}
