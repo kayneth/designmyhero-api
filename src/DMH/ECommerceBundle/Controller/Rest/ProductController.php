@@ -108,6 +108,9 @@ class ProductController extends Controller implements ClassResourceInterface
             }
         }
 
+        $request->files->get('monimgage');
+
+
         $dataWithFiles = $this->addFilesToForm($request->files->all(), $submitted);
         //Gérer 3 cas : Upload de fichier unique, de fichiers multiples, de zip
         //Choisir sur le formulaire et adapter la méthode d'upload selon le cas
