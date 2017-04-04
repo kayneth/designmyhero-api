@@ -157,4 +157,28 @@ class Creation
     {
         return $this->products;
     }
+
+    /**
+     * Set private
+     *
+     * @param boolean $private
+     *
+     * @return Creation
+     */
+    public function setPrivate($private)
+    {
+        $this->private = $private;
+
+        return $this;
+    }
+
+    /**
+     * Get private
+     *
+     * @return boolean
+     */
+    public function getPrivate()
+    {
+        return $this->private;
+    }
 }

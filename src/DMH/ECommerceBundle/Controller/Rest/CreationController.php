@@ -1,22 +1,29 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: kyotsunee
+ * Date: 23/03/2017
+ * Time: 01:58
+ */
 
-namespace DMH\UserBundle\Controller\Rest;
+namespace DMH\ECommerceBundle\Controller\Rest;
 
+use DMH\ECommerceBundle\Entity\Creation;
+use DMH\ECommerceBundle\Form\CreationType;
 use DMH\UserBundle\Entity\User;
-use DMH\UserBundle\Form\UserType;
 use FOS\RestBundle\Routing\ClassResourceInterface;
-use FOS\RestBundle\View\View;
-use FOS\UserBundle\Form\Type\RegistrationFormType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
-use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-use Symfony\Component\HttpFoundation\Response;
-use FOS\RestBundle\Controller\Annotations as Rest;
-use FOS\RestBundle\Controller\Annotations\QueryParam;
+use DMH\ECommerceBundle\Entity\Category;
+use DMH\ECommerceBundle\Form\CategoryType;
 use FOS\RestBundle\Request\ParamFetcher;
+use FOS\RestBundle\View\View;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use FOS\RestBundle\Controller\Annotations\QueryParam;
+use FOS\RestBundle\Controller\Annotations as Rest;
 
-class UserController extends Controller implements ClassResourceInterface
+class CreationController extends Controller implements ClassResourceInterface
 {
 
     /**
@@ -26,7 +33,7 @@ class UserController extends Controller implements ClassResourceInterface
      *
      * @ApiDoc(
      *  resource=true,
-     *  description="Get all User",
+     *  description="Get all Category",
      *  tags={
      *     "stable"
      *  },
@@ -34,7 +41,7 @@ class UserController extends Controller implements ClassResourceInterface
      *      200="Returned when successful",
      *      403="Returned when the user is not authorized",
      *      404={
-     *        "Returned when the user is not found",
+     *        "Returned when the categories is not found",
      *        "Returned when something else is not found"
      *      }
      *  }
@@ -48,8 +55,8 @@ class UserController extends Controller implements ClassResourceInterface
         $limit = $paramFetcher->get('limit') ?: null;
 
         $em = $this->getDoctrine()->getManager();
-        $user = $em
-            ->getRepository('DMHUserBundle:User')
+        $creations = $em
+            ->getRepository('DMHECommerceBundle:Creation')
             ->findBy(
                 array(),
                 array(),
@@ -57,49 +64,72 @@ class UserController extends Controller implements ClassResourceInterface
                 $offset
             );
         ;
-        return array('user' => $user);
+        return array('creations' => $creations);
     }
 
     /**
      * @ApiDoc(
      *
      * )
-     * @Rest\Get("/users/{id}")
+     * @Rest\GET("/users/{id}/creations")
      */
-    public function getAction($slug)
+    public function cgetUserCreationAction(Request $request, User $user, ParamFetcher $paramFetcher)
     {
+        $offset = $paramFetcher->get('offset') ?: null;
+        $limit = $paramFetcher->get('limit') ?: null;
+
         $em = $this->getDoctrine()->getManager();
-        $user = $em
-            ->getRepository('DMHUserBundle:User')
-            ->findOneById($slug);
+        $categories = $em
+            ->getRepository('DMHECommerceBundle:Category')
+            ->findBy(
+                array(),
+                array(),
+                $limit,
+                $offset
+            );
         ;
-        if (empty($product)) {
-            return View::create(['error' => 'User not found'], Response::HTTP_NOT_FOUND);
-        }
-        return array('user' => $user);
+        return array('categories' => $categories);
     }
 
     /**
      * @ApiDoc(
-     *    description="Create an user",
-     *    input={"class"=RegistrationFormType::class, "name"=""},
+     *
+     * )
+     */
+    public function getAction($slug)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $category = $em
+            ->getRepository('DMHECommerceBundle:Category')
+            ->findOneById($slug);
+        ;
+        if (empty($category)) {
+            return View::create(['error' => 'Category not found'], Response::HTTP_NOT_FOUND);
+        }
+        return array('category' => $category);
+    }
+
+    /**
+     * @ApiDoc(
+     *    description="Create a category",
+     *    input={"class"=CreationType::class, "name"=""},
      *    statusCodes = {
      *        201 = "Created successfully",
      *        400 = "Invalid Form"
      *    },
      *    responseMap={
-     *         201 = {"class"=User::class, "groups"={""}},
-     *         400 = { "class"=RegistrationFormType::class, "form_errors"=true, "name" = ""}
+     *         201 = {"class"=Creation::class, "groups"={""}},
+     *         400 = { "class"=CreationType::class, "form_errors"=true, "name" = ""}
      *    }
      * )
      *
      * @Rest\View(statusCode=Response::HTTP_CREATED, serializerGroups={""})
-     * @Rest\Post("/register")
+     * @Rest\Post("/creations")
      */
     public function postAction(Request $request)
     {
-        $user = new User();
-        $form = $this->createForm(RegistrationFormType::class, $user);
+        $creation = new Creation();
+        $form = $this->createForm(CreationType::class, $creation);
 
         $data = $request->request->all();
 
@@ -115,10 +145,10 @@ class UserController extends Controller implements ClassResourceInterface
         if ($form->isValid()) {
 
             $em = $this->getDoctrine()->getManager();
-            $em->persist($user);
+            $em->persist($creation);
             $em->flush();
 
-            return array('user' => $user);
+            return array('creation' => $creation);
 
         }else{
             //essayer ça pour voir si ça retourne un meilleur format qu'avec le form_serializer maison
@@ -135,11 +165,10 @@ class UserController extends Controller implements ClassResourceInterface
      *         }
      *     }
      * )
-     * @Rest\Put("/users/{id}")
      */
-    public function putAction(Request $request, User $user)
+    public function putAction(Request $request, Category $category)
     {
-        $form = $this->createForm(UserType::class, $user);
+        $form = $this->createForm(CategoryType::class, $category);
 
         $data = $request->request->all();
 
@@ -151,16 +180,13 @@ class UserController extends Controller implements ClassResourceInterface
             }
         }
 
-        $file = $request->files->get('image');
-        $submitted['image']['file'] = $file;
-
         $form->submit($submitted);
 
         if ($form->isValid()) {
 
             $em = $this->getDoctrine()->getManager();
             $em->flush();
-            return array('user' => $user);
+            return array('category' => $category);
 
         }else{
             return $form;
@@ -172,16 +198,17 @@ class UserController extends Controller implements ClassResourceInterface
      *
      * )
      * @Rest\View(statusCode=Response::HTTP_NO_CONTENT)
-     * @Rest\Delete("/users/{id}")
+     * @Rest\Delete("/creations/{id}")
      */
-    public function removeAction(Request $request, User $user)
+    public function removeAction(Request $request, Category $category)
     {
-        /* @var $user User */
+        /* @var $category Category */
         $em = $this->get('doctrine.orm.entity_manager');
-        if ($user) {
-            $em->remove($user);
+        if ($category) {
+            $em->remove($category);
             $em->flush();
         }
     }
+
 
 }

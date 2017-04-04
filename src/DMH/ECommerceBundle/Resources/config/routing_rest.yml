@@ -29,3 +29,13 @@ universe:
     type:     rest
     resource: DMH\ECommerceBundle\Controller\Rest\UniverseController
     name_prefix:  api_
+
+creation:
+    type:     rest
+    resource: DMH\ECommerceBundle\Controller\Rest\CreationController
+    name_prefix:  api_
+
+basket:
+    type:     rest
+    resource: DMH\ECommerceBundle\Controller\Rest\BasketController
+    name_prefix:  api_

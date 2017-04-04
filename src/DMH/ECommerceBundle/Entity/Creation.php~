@@ -31,9 +31,16 @@ class Creation
     private $name;
 
     /**
+     * @var boolean
+     *
+     *  @ORM\Column(name="private", type="boolean")
+     */
+    private $private;
+
+    /**
      * @var User
      *
-     * @ORM\ManyToOne(targetEntity="DMH\UserBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="DMH\UserBundle\Entity\User", cascade={})
      * @ORM\JoinColumn(name="author", referencedColumnName="id")
      * @Serializer\Groups({})
      */
@@ -42,13 +49,22 @@ class Creation
     /**
      * @var Product
      *
-     * @ORM\ManyToMany(targetEntity="DMH\ECommerceBundle\Entity\Product")
+     * @ORM\ManyToMany(targetEntity="DMH\ECommerceBundle\Entity\Product", cascade={})
      * @ORM\JoinTable(name="dmh_creation_product")
      *
      * @Serializer\Groups({})
      */
     private $products;
 
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->private = false;
+        $this->products = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
     /**
      * Get id
@@ -82,13 +98,6 @@ class Creation
     public function getName()
     {
         return $this->name;
-    }
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->products = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
