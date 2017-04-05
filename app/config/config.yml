@@ -171,4 +171,5 @@ liip_imagine:
         thumb:
             quality: 100
             filters:
-                thumbnail: { size: [120, 90], mode: inbound }
+                thumbnail: { size: [90, 60], mode: inset }
+                background : { size : [90, 60], position : center }
