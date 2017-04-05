@@ -23,6 +23,7 @@ class CreationType extends AbstractType
                 'multiple'     => true,
                 'required'     => true
             ))
+            ->add('preview', FileUploadType::class)
         ;
     }
     

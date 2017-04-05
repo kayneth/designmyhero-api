@@ -109,6 +109,7 @@ class CostumeController extends Controller implements ClassResourceInterface
             }
         }
 
+
         $form->submit($submitted);
 
         if ($form->isValid()) {

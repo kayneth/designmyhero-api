@@ -13,7 +13,11 @@ class CostumeType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name')->add('slug')->add('universe')        ;
+        $builder
+            ->add('name')
+            ->add('slug')
+            ->add('universe')
+        ;
     }
     
     /**

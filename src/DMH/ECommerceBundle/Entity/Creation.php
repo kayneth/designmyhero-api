@@ -5,12 +5,17 @@ namespace DMH\ECommerceBundle\Entity;
 use DMH\UserBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
+use JMS\Serializer\Annotation\Groups;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Creation
  *
  * @ORM\Table(name="dmh_creation")
  * @ORM\Entity(repositoryClass="DMH\ECommerceBundle\Repository\CreationRepository")
+ * @ORM\HasLifecycleCallbacks()
+ *
+ * @Serializer\ExclusionPolicy("none")
  */
 class Creation
 {
@@ -20,6 +25,8 @@ class Creation
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     *
+     * @Groups({"listCreations"})
      */
     private $id;
 
@@ -27,6 +34,8 @@ class Creation
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=255)
+     *
+     * @Groups({"listCreations"})
      */
     private $name;
 
@@ -40,9 +49,11 @@ class Creation
     /**
      * @var User
      *
+     * @Gedmo\Blameable(on="create")
      * @ORM\ManyToOne(targetEntity="DMH\UserBundle\Entity\User", cascade={})
-     * @ORM\JoinColumn(name="author", referencedColumnName="id")
-     * @Serializer\Groups({})
+     * @ORM\JoinColumn(name="author", referencedColumnName="id", nullable=true)
+     *
+     * @Groups({"listCreations"})
      */
     private $author;
 
@@ -55,6 +66,14 @@ class Creation
      * @Serializer\Groups({})
      */
     private $products;
+
+    /**
+     * @var Media
+     * @ORM\OneToOne(targetEntity="DMH\ECommerceBundle\Entity\Media", cascade={"persist", "remove"})
+     *
+     */
+    private $preview;
+    private $previewDir;
 
 
     /**
@@ -180,5 +199,61 @@ class Creation
     public function getPrivate()
     {
         return $this->private;
+    }
+
+    /**
+     * Set thumbnail
+     *
+     * @param \DMH\ECommerceBundle\Entity\Media $thumbnail
+     *
+     * @return Creation
+     */
+    public function setPreview(\DMH\ECommerceBundle\Entity\Media $thumbnail = null)
+    {
+        $this->preview = $thumbnail;
+
+        return $this;
+    }
+
+    /**
+     * Get thumbnail
+     *
+     * @return \DMH\ECommerceBundle\Entity\Media
+     */
+    public function getPreview()
+    {
+        return $this->preview;
+    }
+
+    /**
+     * @ORM\PostPersist()
+     * @ORM\PostUpdate()
+     */
+    public function setPreviewDir()
+    {
+        $this->previewDir = "uploads/creations/".$this->getId()."/preview";
+        if ($this->preview != null) {
+            $this->preview->setUploadDir($this->previewDir);
+        }
+        return $this;
+    }
+
+    /**
+     * @Serializer\VirtualProperty()
+     * @Serializer\SerializedName("previewLink")
+     *
+     * @Groups({"listCreations"})
+     *
+     * @return string
+     */
+    public function getThumbnailLink()
+    {
+        if($this->preview != null)
+        {
+            $this->setPreviewDir();
+            $dir = $this->preview->getWebPath();
+            return $dir;
+        }
+        return $dir = null;
     }
 }

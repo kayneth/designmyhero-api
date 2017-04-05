@@ -99,14 +99,14 @@ class CreationController extends Controller implements ClassResourceInterface
     public function getAction($slug)
     {
         $em = $this->getDoctrine()->getManager();
-        $category = $em
-            ->getRepository('DMHECommerceBundle:Category')
+        $creation = $em
+            ->getRepository('DMHECommerceBundle:Creation')
             ->findOneById($slug);
         ;
-        if (empty($category)) {
-            return View::create(['error' => 'Category not found'], Response::HTTP_NOT_FOUND);
+        if (empty($creation)) {
+            return View::create(['error' => 'Creation not found'], Response::HTTP_NOT_FOUND);
         }
-        return array('category' => $category);
+        return array('creation' => $creation);
     }
 
     /**
@@ -140,10 +140,15 @@ class CreationController extends Controller implements ClassResourceInterface
             }
         }
 
+        $file = $request->files->get('preview');
+        $submitted['preview']['file'] = $file;
         $form->submit($submitted);
 
         if ($form->isValid()) {
 
+            if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
+                $creation->setPrivate(false);
+            }
             $em = $this->getDoctrine()->getManager();
             $em->persist($creation);
             $em->flush();
@@ -200,12 +205,12 @@ class CreationController extends Controller implements ClassResourceInterface
      * @Rest\View(statusCode=Response::HTTP_NO_CONTENT)
      * @Rest\Delete("/creations/{id}")
      */
-    public function removeAction(Request $request, Category $category)
+    public function removeAction(Request $request, Creation $creation)
     {
-        /* @var $category Category */
+        /* @var $creation Creation */
         $em = $this->get('doctrine.orm.entity_manager');
-        if ($category) {
-            $em->remove($category);
+        if ($creation) {
+            $em->remove($creation);
             $em->flush();
         }
     }
