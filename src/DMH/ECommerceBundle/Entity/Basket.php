@@ -27,10 +27,15 @@ class Basket
      * @var User
      *
      * @ORM\OneToOne(targetEntity="DMH\UserBundle\Entity\User", cascade={})
-     * @ORM\JoinColumn(name="author", referencedColumnName="id")
+     * @ORM\JoinColumn(name="user", referencedColumnName="id")
      * @Serializer\Groups({})
      */
     private $user;
+
+    /**
+     * @ORM\OneToMany(targetEntity="DMH\ECommerceBundle\Entity\BasketCreation", mappedBy="basket", cascade={"persist", "remove"})
+     */
+    private $items;
 
 
     /**
@@ -48,6 +53,7 @@ class Basket
     public function __construct()
     {
         $this->creations = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->items = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -75,36 +81,39 @@ class Basket
     }
 
     /**
-     * Add creation
+     * Add item
      *
-     * @param \DMH\ECommerceBundle\Entity\Creation $creation
+     * @param \DMH\ECommerceBundle\Entity\BasketCreation $item
      *
      * @return Basket
      */
-    public function addCreation(\DMH\ECommerceBundle\Entity\Creation $creation)
+    public function addItem(\DMH\ECommerceBundle\Entity\BasketCreation $item)
     {
-        $this->creations[] = $creation;
+        $this->items[] = $item;
+
+        // On lie le basket à l'item
+        $item->setBasket($this);
 
         return $this;
     }
 
     /**
-     * Remove creation
+     * Remove item
      *
-     * @param \DMH\ECommerceBundle\Entity\Creation $creation
+     * @param \DMH\ECommerceBundle\Entity\BasketCreation $item
      */
-    public function removeCreation(\DMH\ECommerceBundle\Entity\Creation $creation)
+    public function removeItem(\DMH\ECommerceBundle\Entity\BasketCreation $item)
     {
-        $this->creations->removeElement($creation);
+        $this->items->removeElement($item);
     }
 
     /**
-     * Get creations
+     * Get items
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getCreations()
+    public function getItems()
     {
-        return $this->creations;
+        return $this->items;
     }
 }

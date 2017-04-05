@@ -26,13 +26,16 @@ class Basket
     /**
      * @var User
      *
-     * @ORM\OneToOne(targetEntity="DMH\UserBundle\Entity\User")
+     * @ORM\OneToOne(targetEntity="DMH\UserBundle\Entity\User", cascade={})
      * @ORM\JoinColumn(name="author", referencedColumnName="id")
      * @Serializer\Groups({})
      */
     private $user;
 
-
+    /**
+     * @ORM\OneToMany(targetEntity="DMH\ECommerceBundle\Entity\BasketCreation", mappedBy="basket")
+     */
+    private $items;
 
 
     /**

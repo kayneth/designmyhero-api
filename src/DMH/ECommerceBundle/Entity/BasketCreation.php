@@ -26,7 +26,7 @@ class BasketCreation
     /**
      * @var Basket
      *
-     * @ORM\ManyToOne(targetEntity="DMH\ECommerceBundle\Entity\Basket", cascade={})
+     * @ORM\ManyToOne(targetEntity="DMH\ECommerceBundle\Entity\Basket", cascade={}, inversedBy="items")
      * @ORM\JoinColumn(nullable=false)
      *
      * @Serializer\Groups({})
@@ -41,7 +41,7 @@ class BasketCreation
      *
      * @Serializer\Groups({})
      */
-    private $creations;
+    private $creation;
 
 
     /**
@@ -103,26 +103,26 @@ class BasketCreation
     }
 
     /**
-     * Set creations
+     * Set creation
      *
-     * @param \DMH\ECommerceBundle\Entity\Creation $creations
+     * @param \DMH\ECommerceBundle\Entity\Creation $creation
      *
      * @return BasketCreation
      */
-    public function setCreations(\DMH\ECommerceBundle\Entity\Creation $creations)
+    public function setCreation(\DMH\ECommerceBundle\Entity\Creation $creation)
     {
-        $this->creations = $creations;
+        $this->creation = $creation;
 
         return $this;
     }
 
     /**
-     * Get creations
+     * Get creation
      *
      * @return \DMH\ECommerceBundle\Entity\Creation
      */
-    public function getCreations()
+    public function getCreation()
     {
-        return $this->creations;
+        return $this->creation;
     }
 }

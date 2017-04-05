@@ -8,6 +8,10 @@
 
 namespace DMH\ECommerceBundle\Controller\Rest;
 
+use DMH\ECommerceBundle\Entity\Basket;
+use DMH\ECommerceBundle\Entity\BasketCreation;
+use DMH\ECommerceBundle\Form\BasketType;
+use DMH\UserBundle\Entity\User;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use DMH\ECommerceBundle\Entity\Category;
@@ -19,6 +23,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use FOS\RestBundle\Controller\Annotations\QueryParam;
 use FOS\RestBundle\Controller\Annotations as Rest;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 class BasketController extends Controller implements ClassResourceInterface
 {
@@ -64,17 +69,23 @@ class BasketController extends Controller implements ClassResourceInterface
         return array('categories' => $categories);
     }
 
-    public function getAction($slug)
+    /**
+     * @ApiDoc(
+     *
+     * )
+     * @rest\Get("users/{id}/basket")
+     */
+    public function getAction(User $user)
     {
         $em = $this->getDoctrine()->getManager();
-        $category = $em
-            ->getRepository('DMHECommerceBundle:Category')
-            ->findOneById($slug);
+        $basket = $em
+            ->getRepository('DMHECommerceBundle:Basket')
+            ->findOneByUser($user);
         ;
-        if (empty($category)) {
-            return View::create(['error' => 'Category not found'], Response::HTTP_NOT_FOUND);
+        if (empty($basket)) {
+            return View::create(['error' => 'Basket not found'], Response::HTTP_NOT_FOUND);
         }
-        return array('category' => $category);
+        return array('basket' => $basket);
     }
 
     /**
@@ -158,12 +169,35 @@ class BasketController extends Controller implements ClassResourceInterface
 
     /**
      * @ApiDoc(
-     *
+     *    input={"class"=BasketType::class, "name"=""},
+     *    statusCodes = {
+     *        201 = "Created successfully",
+     *        400 = "Invalid Form"
+     *    },
+     *    responseMap={
+     *         201 = {"class"=Basket::class, "groups"={""}},
+     *         400 = { "class"=BasketType::class, "form_errors"=true, "name" = ""}
+     *    }
      * )
+     * @Rest\Patch("/users/{id}/basket")
+     *
+     * //@Security("is_granted('IS_AUTHENTICATED_FULLY')")
      */
-    public function patchAction(Request $request, Category $category)
+    public function patchAction(Request $request, User $user)
     {
-        $form = $this->createForm(CategoryType::class, $category);
+
+        $em = $this->getDoctrine()->getManager();
+        $basketRep = $em->getRepository("DMHECommerceBundle:Basket");
+        $basket = $basketRep->findOneByUser($user);
+
+        if(empty($basket)) {
+            $basket = new Basket();
+            $basket->setUser();
+            $em->persist($basket);
+            $em->flush();
+        }
+
+        $form = $this->createForm(BasketType::class, $basket);
 
         $data = $request->request->all();
 
@@ -175,13 +209,18 @@ class BasketController extends Controller implements ClassResourceInterface
             }
         }
 
-        $form->submit($submitted);
+        $form->submit($submitted, false);
 
         if ($form->isValid()) {
 
-            $em = $this->getDoctrine()->getManager();
+            foreach ($basket->getItems() as $item) {
+                /* @var BasketCreation $item */
+                $item->setBasket($basket);
+                $em->persist($item);
+            }
+
             $em->flush();
-            return array('category' => $category);
+            return array('basket' => $basket);
 
         }else{
             return $form;
@@ -193,14 +232,16 @@ class BasketController extends Controller implements ClassResourceInterface
      *
      * )
      * @Rest\View(statusCode=Response::HTTP_NO_CONTENT)
-     * @Rest\Delete("/baskets/{id}")
+     * @Rest\Delete("/users/{id}/basket/items/{item}")
+     *
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      */
-    public function removeAction(Request $request, Category $category)
+    public function removeItemAction(Request $request, User $user, BasketCreation $item)
     {
-        /* @var $category Category */
+        /* @var $item BasketCreation */
         $em = $this->get('doctrine.orm.entity_manager');
-        if ($category) {
-            $em->remove($category);
+        if ($item) {
+            $em->remove($item);
             $em->flush();
         }
     }
