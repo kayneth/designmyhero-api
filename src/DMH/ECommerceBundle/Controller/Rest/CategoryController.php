@@ -79,6 +79,25 @@ class CategoryController extends Controller implements ClassResourceInterface
 
     /**
      * @ApiDoc(
+     *
+     * )Rest\Get("/categories/{id}/products")
+     * @
+     */
+    public function getProductsAction(Request $request, Category $category)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $products = $em
+            ->getRepository('DMHECommerceBundle:Product')
+            ->findByCategory($category);
+        ;
+        if (empty($products)) {
+            return View::create(['error' => 'Product not found'], Response::HTTP_NOT_FOUND);
+        }
+        return array('products' => $products);
+    }
+
+    /**
+     * @ApiDoc(
      *    description="Create a category",
      *    input={"class"=CategoryType::class, "name"=""},
      *    statusCodes = {
